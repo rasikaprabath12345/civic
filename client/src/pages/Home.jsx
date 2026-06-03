@@ -170,9 +170,9 @@ const Home = () => {
         /* Hero */
         .cl-hero {
           position: relative; overflow: hidden;
-          min-height: 92vh;
+          min-height: auto;
           display: flex; flex-direction: column; align-items: center; justify-content: center;
-          padding: 80px 24px 120px;
+          padding: 20px 24px 20px;
         }
         .cl-hero::before {
           content: '';
