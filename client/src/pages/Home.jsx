@@ -230,20 +230,23 @@ const Home = () => {
         }
 
         .cl-hero-title {
-          font-size: clamp(3rem, 8vw, 6rem);
+          font-size: clamp(2.2rem, 6vw, 4.2rem);
           font-weight: 800; line-height: 1.05;
           color: var(--white); text-align: center; margin-bottom: 10px;
           position: relative; z-index: 2;
+          letter-spacing: -0.01em;
         }
         .cl-hero-title span {
           background: linear-gradient(135deg, var(--gold), var(--gold2));
           -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         .cl-hero-sub {
-          font-family: 'DM Sans', sans-serif; font-size: clamp(1rem, 2.5vw, 1.3rem);
-          font-weight: 300; color: rgba(255,255,255,0.95); text-align: center;
-          max-width: 560px; margin: 0 auto 40px; line-height: 1.7;
+          font-family: 'DM Sans', sans-serif; font-size: clamp(1rem, 2.4vw, 1.25rem);
+          font-weight: 400; color: rgba(255,255,255,1); text-align: center;
+          max-width: 560px; margin: 0 auto 40px; line-height: 1.8;
           position: relative; z-index: 2;
+          letter-spacing: 0.03em;
+          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
         .cl-hero-cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
 
@@ -488,7 +491,7 @@ const Home = () => {
         <div style={{
           position: 'absolute', bottom: 36, left: '50%', transform: 'translateX(-50%)',
           color: 'rgba(255,255,255,0.4)', fontSize: '1.5rem', zIndex: 2,
-          animation: 'bounce 2s ease-in-out infinite',
+          animation: 'bounce 2s ease-in-out infinite', display: 'none',
         }}>
           ↓
           <style>{`@keyframes bounce {
