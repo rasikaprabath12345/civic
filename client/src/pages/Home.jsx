@@ -170,21 +170,32 @@ const Home = () => {
         /* Hero */
         .cl-hero {
           position: relative; overflow: hidden;
-          background: 
-            linear-gradient(135deg, rgba(13, 38, 69, 0.3) 0%, rgba(26, 58, 110, 0.3) 60%, rgba(13, 38, 69, 0.4) 100%),
-            url('/j.jpg') center/cover no-repeat;
           min-height: 92vh;
           display: flex; flex-direction: column; align-items: center; justify-content: center;
           padding: 80px 24px 120px;
         }
+        .cl-hero::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: 
+            linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.5) 100%),
+            url('/j.jpg') center/cover no-repeat;
+          z-index: 0;
+        }
+        .cl-hero > * {
+          position: relative;
+          z-index: 2;
+        }
         .cl-hero-grid {
-          position: absolute; inset: 0; opacity: 0.04;
+          position: absolute; inset: 0; opacity: 0;
           background-image: linear-gradient(var(--white) 1px, transparent 1px),
                             linear-gradient(90deg, var(--white) 1px, transparent 1px);
           background-size: 60px 60px;
         }
         .cl-hero-glow {
           position: absolute; border-radius: 50%; filter: blur(90px); pointer-events: none;
+          display: none;
         }
         .cl-hero-glow-1 {
           width: 500px; height: 500px; background: rgba(197,148,42,0.18);
@@ -197,14 +208,17 @@ const Home = () => {
         .cl-flag-stripe {
           position: absolute; top: 0; left: 0; right: 0; height: 4px;
           background: linear-gradient(90deg, #8B0000 0%, #8B0000 33%, #F90 33%, #F90 66%, #006400 66%, #006400 100%);
+          display: none;
         }
 
         .cl-badge {
           display: inline-flex; align-items: center; gap: 8px;
-          border: 1px solid rgba(197,148,42,0.5); border-radius: 100px;
-          padding: 6px 18px; color: var(--gold2); font-size: 0.8rem; font-weight: 500;
+          border: 1px solid rgba(255,255,255,0.4); border-radius: 100px;
+          padding: 6px 18px; color: rgba(255,255,255,0.9); font-size: 0.8rem; font-weight: 500;
           letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 24px;
-          backdrop-filter: blur(8px); background: rgba(197,148,42,0.08);
+          background: rgba(0, 0, 0, 0.2);
+          backdrop-filter: blur(8px);
+          position: relative; z-index: 2;
         }
         .cl-badge-dot {
           width: 7px; height: 7px; border-radius: 50%; background: var(--gold);
@@ -219,6 +233,7 @@ const Home = () => {
           font-size: clamp(3rem, 8vw, 6rem);
           font-weight: 800; line-height: 1.05;
           color: var(--white); text-align: center; margin-bottom: 10px;
+          position: relative; z-index: 2;
         }
         .cl-hero-title span {
           background: linear-gradient(135deg, var(--gold), var(--gold2));
@@ -226,8 +241,9 @@ const Home = () => {
         }
         .cl-hero-sub {
           font-family: 'DM Sans', sans-serif; font-size: clamp(1rem, 2.5vw, 1.3rem);
-          font-weight: 300; color: rgba(255,255,255,0.72); text-align: center;
+          font-weight: 300; color: rgba(255,255,255,0.95); text-align: center;
           max-width: 560px; margin: 0 auto 40px; line-height: 1.7;
+          position: relative; z-index: 2;
         }
         .cl-hero-cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
 

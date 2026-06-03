@@ -43,10 +43,10 @@ const Navbar = () => {
 
         .cl-nav {
           position: sticky; top: 0; z-index: 1000;
-          background: rgba(13, 38, 69, 0.97);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-          border-bottom: 1px solid rgba(197, 148, 42, 0.2);
+          background: rgba(255, 255, 255, 0.5);
+          backdrop-filter: blur(20px) saturate(180%);
+          -webkit-backdrop-filter: blur(20px) saturate(180%);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.25);
           transition: padding 0.3s ease, box-shadow 0.3s ease;
           font-family: 'DM Sans', sans-serif;
         }
@@ -67,7 +67,7 @@ const Navbar = () => {
         .cl-nav-logo {
           font-family: 'Playfair Display', serif;
           font-size: 1.45rem; font-weight: 700;
-          color: #FFFFFF; text-decoration: none;
+          color: #0D2645; text-decoration: none;
           letter-spacing: -0.01em;
           display: flex; align-items: center; gap: 10px;
           transition: opacity 0.2s;
@@ -95,7 +95,7 @@ const Navbar = () => {
         }
         .cl-nav-links a {
           font-size: 0.88rem; font-weight: 500;
-          color: rgba(255, 255, 255, 0.72);
+          color: rgba(13, 38, 69, 0.7);
           text-decoration: none;
           padding: 7px 14px; border-radius: 8px;
           transition: color 0.2s, background 0.2s;
@@ -103,8 +103,8 @@ const Navbar = () => {
           white-space: nowrap;
         }
         .cl-nav-links a:hover {
-          color: #FFFFFF;
-          background: rgba(255, 255, 255, 0.07);
+          color: #0D2645;
+          background: rgba(13, 38, 69, 0.07);
         }
         .cl-nav-links a.active {
           color: #F0C060;
@@ -114,7 +114,7 @@ const Navbar = () => {
         /* Divider */
         .cl-nav-divider {
           width: 1px; height: 24px;
-          background: rgba(255, 255, 255, 0.12);
+          background: rgba(13, 38, 69, 0.12);
           margin: 0 8px; flex-shrink: 0;
         }
 
@@ -131,7 +131,7 @@ const Navbar = () => {
           letter-spacing: 0.03em; flex-shrink: 0;
         }
         .cl-nav-username {
-          font-size: 0.85rem; color: rgba(255,255,255,0.75);
+          font-size: 0.85rem; color: rgba(13, 38, 69, 0.75);
           font-weight: 500; max-width: 130px;
           overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
         }
@@ -156,20 +156,20 @@ const Navbar = () => {
           box-shadow: 0 6px 20px rgba(197, 148, 42, 0.45);
         }
         .cl-nav-btn-ghost {
-          background: transparent; color: rgba(255,255,255,0.8);
+          background: transparent; color: rgba(13, 38, 69, 0.7);
           font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.85rem;
           padding: 9px 18px; border-radius: 100px;
-          border: 1.5px solid rgba(255,255,255,0.25); cursor: pointer;
+          border: 1.5px solid rgba(13, 38, 69, 0.2); cursor: pointer;
           text-decoration: none; display: inline-block; white-space: nowrap;
           transition: background 0.2s, border-color 0.2s, color 0.2s;
         }
         .cl-nav-btn-ghost:hover {
-          background: rgba(255,255,255,0.06);
-          border-color: rgba(255,255,255,0.5);
-          color: #FFFFFF;
+          background: rgba(13, 38, 69, 0.06);
+          border-color: rgba(13, 38, 69, 0.4);
+          color: #0D2645;
         }
         .cl-nav-btn-logout {
-          background: transparent; color: rgba(255,255,255,0.55);
+          background: transparent; color: rgba(13, 38, 69, 0.55);
           font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.85rem;
           padding: 8px 14px; border-radius: 8px;
           border: none; cursor: pointer;
@@ -183,19 +183,19 @@ const Navbar = () => {
         .cl-nav-toggle {
           display: none;
           background: transparent; border: none; cursor: pointer;
-          color: rgba(255,255,255,0.8); font-size: 1.5rem;
+          color: rgba(13, 38, 69, 0.7); font-size: 1.5rem;
           padding: 6px; border-radius: 8px;
           transition: color 0.2s, background 0.2s;
           line-height: 1;
         }
         .cl-nav-toggle:hover {
-          color: #FFFFFF; background: rgba(255,255,255,0.07);
+          color: #0D2645; background: rgba(13, 38, 69, 0.07);
         }
 
         /* Mobile menu */
         .cl-nav-mobile {
-          border-top: 1px solid rgba(197, 148, 42, 0.15);
-          background: rgba(10, 28, 54, 0.98);
+          border-top: 1px solid rgba(13, 38, 69, 0.1);
+          background: rgba(255, 255, 255, 0.98);
           padding: 16px 24px 20px;
           display: flex; flex-direction: column; gap: 4px;
         }
@@ -203,7 +203,7 @@ const Navbar = () => {
         .cl-nav-mobile button {
           font-family: 'DM Sans', sans-serif;
           font-size: 0.95rem; font-weight: 500;
-          color: rgba(255,255,255,0.75); text-decoration: none;
+          color: rgba(13, 38, 69, 0.7); text-decoration: none;
           padding: 11px 14px; border-radius: 10px;
           display: block; width: 100%; text-align: left;
           background: transparent; border: none; cursor: pointer;
@@ -211,13 +211,13 @@ const Navbar = () => {
         }
         .cl-nav-mobile a:hover,
         .cl-nav-mobile button:hover {
-          color: #FFFFFF; background: rgba(255,255,255,0.07);
+          color: #0D2645; background: rgba(13, 38, 69, 0.07);
         }
         .cl-nav-mobile a.active {
-          color: #F0C060; background: rgba(197,148,42,0.1);
+          color: #C5942A; background: rgba(197, 148, 42, 0.1);
         }
         .cl-nav-mobile-divider {
-          height: 1px; background: rgba(255,255,255,0.08);
+          height: 1px; background: rgba(13, 38, 69, 0.08);
           margin: 8px 0;
         }
         .cl-nav-mobile-user {
@@ -238,8 +238,8 @@ const Navbar = () => {
           box-shadow: 0 3px 14px rgba(197,148,42,0.3);
         }
         .cl-nav-mobile-ghost {
-          border: 1.5px solid rgba(255,255,255,0.2) !important;
-          border-radius: 100px !important; color: rgba(255,255,255,0.8) !important;
+          border: 1.5px solid rgba(13, 38, 69, 0.2) !important;
+          border-radius: 100px !important; color: rgba(13, 38, 69, 0.7) !important;
         }
         .cl-nav-mobile-logout {
           color: rgba(248, 113, 113, 0.8) !important;
