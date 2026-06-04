@@ -4,6 +4,7 @@
  * User login form with email and password
  * Validates input and connects to backend
  * Redirects to dashboard on success
+ * Includes forgot password and remember me options
  */
 
 import React, { useState } from 'react';
@@ -18,6 +19,7 @@ const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
+    rememberMe: false,
   });
 
   // UI state
@@ -28,10 +30,10 @@ const Login = () => {
    * Handle input change
    */
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
     setError(''); // Clear error when user starts typing
   };
@@ -58,6 +60,13 @@ const Login = () => {
       const response = await login(formData.email, formData.password);
 
       if (response.success) {
+        // Save remember me preference
+        if (formData.rememberMe) {
+          localStorage.setItem('rememberedEmail', formData.email);
+        } else {
+          localStorage.removeItem('rememberedEmail');
+        }
+
         // Redirect based on user role
         if (response.user.role === 'admin') {
           navigate('/admin-dashboard');
@@ -108,11 +117,19 @@ const Login = () => {
             />
           </div>
 
-          {/* Password Input */}
+          {/* Password Input with Forgot Password Link */}
           <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              Password
-            </label>
+            <div className="flex justify-between items-center mb-2">
+              <label className="block text-gray-700 font-semibold">
+                Password
+              </label>
+              <Link 
+                to="/forgot-password" 
+                className="text-sm text-primary hover:underline font-medium"
+              >
+                Forgot Password?
+              </Link>
+            </div>
             <input
               type="password"
               name="password"
@@ -124,6 +141,21 @@ const Login = () => {
             />
           </div>
 
+          {/* Remember Me Checkbox */}
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              id="rememberMe"
+              name="rememberMe"
+              checked={formData.rememberMe}
+              onChange={handleChange}
+              className="w-4 h-4 text-primary rounded border-gray-300 cursor-pointer"
+            />
+            <label htmlFor="rememberMe" className="ml-2 text-sm text-gray-600 cursor-pointer">
+              Remember me on this device
+            </label>
+          </div>
+
           {/* Login Button */}
           <button
             type="submit"
@@ -133,6 +165,32 @@ const Login = () => {
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
+
+        {/* Divider */}
+        <div className="my-6 relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-white text-gray-500">Or</span>
+          </div>
+        </div>
+
+        {/* Additional Options */}
+        <div className="space-y-3 mb-6">
+          <button
+            type="button"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition flex items-center justify-center gap-2"
+          >
+            <span>📱</span> Sign in with NIC
+          </button>
+          <button
+            type="button"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition flex items-center justify-center gap-2"
+          >
+            <span>📧</span> Sign in with Email
+          </button>
+        </div>
 
         {/* Footer */}
         <div className="mt-6 text-center text-gray-600">

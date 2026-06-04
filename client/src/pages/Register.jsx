@@ -22,6 +22,8 @@ const Register = () => {
     phone: '',
     password: '',
     confirmPassword: '',
+    agreeTerms: false,
+    newsletter: false,
   });
 
   // UI state
@@ -32,10 +34,10 @@ const Register = () => {
    * Handle input change
    */
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
     setError(''); // Clear error when user starts typing
   };
@@ -74,6 +76,13 @@ const Register = () => {
       // Validate password match
       if (formData.password !== formData.confirmPassword) {
         setError('Passwords do not match');
+        setLoading(false);
+        return;
+      }
+
+      // Validate terms agreement
+      if (!formData.agreeTerms) {
+        setError('You must agree to the Terms and Conditions');
         setLoading(false);
         return;
       }
@@ -212,6 +221,44 @@ const Register = () => {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm"
               disabled={loading}
             />
+          </div>
+
+          {/* Terms and Conditions Checkbox */}
+          <div className="flex items-start gap-2 mt-4">
+            <input
+              type="checkbox"
+              id="agreeTerms"
+              name="agreeTerms"
+              checked={formData.agreeTerms}
+              onChange={handleChange}
+              className="w-4 h-4 text-primary rounded mt-1 cursor-pointer"
+            />
+            <label htmlFor="agreeTerms" className="text-xs text-gray-600 cursor-pointer">
+              I agree to the{' '}
+              <Link to="#" className="text-primary font-semibold hover:underline">
+                Terms and Conditions
+              </Link>
+              {' '}and{' '}
+              <Link to="#" className="text-primary font-semibold hover:underline">
+                Privacy Policy
+              </Link>
+              <span className="text-red-500">*</span>
+            </label>
+          </div>
+
+          {/* Newsletter Checkbox */}
+          <div className="flex items-start gap-2">
+            <input
+              type="checkbox"
+              id="newsletter"
+              name="newsletter"
+              checked={formData.newsletter}
+              onChange={handleChange}
+              className="w-4 h-4 text-primary rounded mt-1 cursor-pointer"
+            />
+            <label htmlFor="newsletter" className="text-xs text-gray-600 cursor-pointer">
+              Send me updates about new government services and features
+            </label>
           </div>
 
           {/* Register Button */}
