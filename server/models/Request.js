@@ -12,7 +12,7 @@ const mongoose = require('mongoose');
  * - userId: Reference to the user who made the request
  * - type: Type of request (certificate, complaint, appointment, etc.)
  * - status: Request status (pending, processing, completed)
- * - details: Request details/description
+ * - details: Request details/description (can be string or object)
  * - createdAt: Timestamp of request creation
  * - updatedAt: Timestamp of last update
  */
@@ -35,8 +35,8 @@ const requestSchema = new mongoose.Schema(
       default: 'pending',
     },
     details: {
-      type: String,
-      trim: true,
+      type: mongoose.Schema.Types.Mixed,
+      required: true,
     },
   },
   {

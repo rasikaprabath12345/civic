@@ -51,12 +51,18 @@ const CertificateRequest = () => {
     try {
       setLoading(true);
       const requestData = {
-        ...formData,
-        userId: user._id,
-        status: 'pending',
+        type: 'certificate',
+        details: {
+          certificateType: formData.certificateType,
+          fullName: formData.fullName,
+          dateOfBirth: formData.dateOfBirth,
+          purpose: formData.purpose,
+          quantity: formData.quantity,
+          deliveryMethod: formData.deliveryMethod,
+        },
       };
 
-      const response = await api.post('/certificates/request', requestData);
+      const response = await api.post('/requests/create', requestData);
 
       if (response.data.success) {
         setSubmitted(true);
@@ -66,6 +72,7 @@ const CertificateRequest = () => {
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to submit certificate request');
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -216,7 +223,7 @@ const CertificateRequest = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-semibold py-3 rounded-lg transition duration-200"
+              className="w-full bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-lg transition duration-200"
             >
               {loading ? 'Submitting...' : 'Submit Request'}
             </button>

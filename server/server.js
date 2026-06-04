@@ -15,6 +15,7 @@ const connectDB = require('./config/db');
 // Import routes
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const citizenRoutes = require('./routes/citizenRoutes');
 
 // Initialize Express app
 const app = express();
@@ -68,6 +69,16 @@ app.use('/api/auth', authRoutes);
 // GET /api/admin/users - Get all users
 // GET /api/admin/stats - Get statistics
 app.use('/api/admin', adminRoutes);
+
+// Citizen routes (protected)
+// GET /api/appointments/my-appointments - Get user's appointments
+// POST /api/appointments/create - Create new appointment
+// PATCH /api/appointments/:appointmentId/cancel - Cancel appointment
+// GET /api/requests/my-requests - Get user's requests
+// POST /api/requests/create - Create new request
+// GET /api/complaints/my-complaints - Get user's complaints
+// POST /api/complaints/submit - Submit new complaint
+app.use('/api', citizenRoutes);
 
 /**
  * 404 Error Handler

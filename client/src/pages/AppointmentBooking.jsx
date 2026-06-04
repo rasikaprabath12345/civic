@@ -12,44 +12,39 @@ import api from '../services/api';
 const AppointmentBooking = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const [formData, setFormData] = useState({
     service: '',
     date: '',
-    time: '',
+    location: '',
     notes: '',
   });
 
   const [submitted, setSubmitted] = useState(false);
 
+  const services = [
+    { id: 1, name: 'Grama Sevaka' },
+    { id: 2, name: 'Birth Registration' },
+    { id: 3, name: 'Death Registration' },
+    { id: 4, name: 'Marriage Registration' },
+    { id: 5, name: 'Land Registry' },
+  ];
+
+  const locations = [
+    'Colombo District Office',
+    'Kandy District Office',
+    'Galle District Office',
+    'Jaffna District Office',
+    'Anuradhapura District Office',
+  ];
+
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/login');
-      return;
     }
-    fetchServices();
   }, [isAuthenticated, navigate]);
-
-  const fetchServices = async () => {
-    try {
-      setLoading(true);
-      // Mock services - replace with API call
-      const mockServices = [
-        { id: 1, name: 'Grama Sevaka Certification', duration: '30 mins' },
-        { id: 2, name: 'Birth Certificate Application', duration: '15 mins' },
-        { id: 3, name: 'Marriage Certificate Registration', duration: '45 mins' },
-        { id: 4, name: 'Death Certificate Processing', duration: '20 mins' },
-      ];
-      setServices(mockServices);
-    } catch (err) {
-      setError('Failed to load services');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -57,25 +52,30 @@ const AppointmentBooking = () => {
       ...prev,
       [name]: value,
     }));
+    setError('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
 
-    if (!formData.service || !formData.date || !formData.time) {
+    if (!formData.service || !formData.date || !formData.location) {
       setError('Please fill in all required fields');
+      setLoading(false);
       return;
     }
 
     try {
+      // Convert date to proper format
       const appointmentData = {
-        ...formData,
-        userId: user._id,
-        status: 'pending',
+        service: formData.service,
+        date: new Date(formData.date).toISOString(),
+        location: formData.location,
+        notes: formData.notes,
       };
 
-      const response = await api.post('/appointments/book', appointmentData);
+      const response = await api.post('/appointments/create', appointmentData);
 
       if (response.data.success) {
         setSubmitted(true);
@@ -85,10 +85,11 @@ const AppointmentBooking = () => {
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to book appointment');
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
-
-  if (loading) return <div className="p-8 text-center">Loading...</div>;
 
   if (submitted) {
     return (
@@ -96,7 +97,7 @@ const AppointmentBooking = () => {
         <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center">
           <div className="text-5xl mb-4">✅</div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Appointment Booked!</h2>
-          <p className="text-gray-600 mb-4">Your appointment has been successfully booked. Check your email for confirmation.</p>
+          <p className="text-gray-600 mb-4">Your appointment has been successfully scheduled. Check your email for confirmation details.</p>
           <p className="text-sm text-gray-500">Redirecting to dashboard...</p>
         </div>
       </div>
@@ -108,7 +109,7 @@ const AppointmentBooking = () => {
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Book an Appointment</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">📅 Book an Appointment</h1>
           <p className="text-gray-600">Schedule your appointment with government officials</p>
         </div>
 
@@ -124,7 +125,7 @@ const AppointmentBooking = () => {
             {/* Service Selection */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-3">
-                Select Service *
+                Select Service <span className="text-red-600">*</span>
               </label>
               <select
                 name="service"
@@ -136,7 +137,28 @@ const AppointmentBooking = () => {
                 <option value="">Choose a service...</option>
                 {services.map((service) => (
                   <option key={service.id} value={service.name}>
-                    {service.name} ({service.duration})
+                    {service.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Location Selection */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
+                Select Location <span className="text-red-600">*</span>
+              </label>
+              <select
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                required
+              >
+                <option value="">Choose a location...</option>
+                {locations.map((location, idx) => (
+                  <option key={idx} value={location}>
+                    {location}
                   </option>
                 ))}
               </select>
@@ -145,10 +167,10 @@ const AppointmentBooking = () => {
             {/* Date Selection */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-3">
-                Preferred Date *
+                Preferred Date <span className="text-red-600">*</span>
               </label>
               <input
-                type="date"
+                type="datetime-local"
                 name="date"
                 value={formData.date}
                 onChange={handleChange}
@@ -156,29 +178,7 @@ const AppointmentBooking = () => {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                 required
               />
-              <p className="text-xs text-gray-500 mt-2">Select a date from today onwards</p>
-            </div>
-
-            {/* Time Selection */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-3">
-                Preferred Time *
-              </label>
-              <select
-                name="time"
-                value={formData.time}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-                required
-              >
-                <option value="">Select time...</option>
-                <option value="09:00">9:00 AM</option>
-                <option value="10:00">10:00 AM</option>
-                <option value="11:00">11:00 AM</option>
-                <option value="14:00">2:00 PM</option>
-                <option value="15:00">3:00 PM</option>
-                <option value="16:00">4:00 PM</option>
-              </select>
+              <p className="text-xs text-gray-500 mt-2">Select a date and time from today onwards</p>
             </div>
 
             {/* Notes */}
@@ -199,9 +199,10 @@ const AppointmentBooking = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition duration-200"
+              disabled={loading}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Book Appointment
+              {loading ? 'Booking...' : 'Book Appointment'}
             </button>
           </form>
 
