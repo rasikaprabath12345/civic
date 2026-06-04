@@ -304,7 +304,7 @@ const Home = () => {
         .cl-section { padding: 96px 24px; }
         .cl-section-cream { background: var(--cream); }
         .cl-section-white { background: var(--white); }
-        .cl-section-navy { background: var(--navy); }
+        .cl-section-navy { background: var(--cream); }
 
         .cl-section-label {
           display: inline-block; font-size: 0.75rem; font-weight: 600;
@@ -315,7 +315,7 @@ const Home = () => {
           font-size: clamp(1.9rem, 4vw, 3rem);
           font-weight: 700; line-height: 1.18; color: var(--navy);
         }
-        .cl-section-title-light { color: var(--white); }
+        .cl-section-title-light { color: var(--navy); }
 
         /* Services grid */
         .cl-services-grid {
@@ -383,20 +383,20 @@ const Home = () => {
         .cl-feat {
           display: flex; flex-direction: column; align-items: flex-start; gap: 14px;
           padding: 32px 24px; border-radius: var(--radius);
-          border: 1px solid rgba(255,255,255,0.1);
-          background: rgba(255,255,255,0.04); transition: background 0.3s;
+          border: 1px solid rgba(13,38,69,0.1);
+          background: rgba(255,255,255,0.7); transition: background 0.3s;
         }
-        .cl-feat:hover { background: rgba(255,255,255,0.08); }
+        .cl-feat:hover { background: rgba(255,255,255,0.9); }
         .cl-feat-icon {
-          font-size: 2rem; background: rgba(197,148,42,0.15);
+          font-size: 2rem; background: rgba(197,148,42,0.12);
           width: 52px; height: 52px; border-radius: 14px;
           display: flex; align-items: center; justify-content: center;
         }
         .cl-feat-title {
           font-family: 'Playfair Display', serif; font-size: 1.15rem;
-          font-weight: 700; color: var(--white);
+          font-weight: 700; color: var(--navy);
         }
-        .cl-feat-desc { font-size: 0.88rem; color: rgba(255,255,255,0.6); line-height: 1.65; }
+        .cl-feat-desc { font-size: 0.88rem; color: var(--slate); line-height: 1.65; }
 
         /* Welcome banner */
         .cl-welcome {
