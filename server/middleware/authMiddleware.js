@@ -75,8 +75,28 @@ const isCitizen = (req, res, next) => {
   next();
 };
 
+/**
+ * Middleware: Authorize specific roles
+ * Generic middleware to check if user has required role(s)
+ * Usage: authorize('admin') or authorize(['admin', 'moderator'])
+ */
+const authorize = (requiredRoles) => {
+  return (req, res, next) => {
+    const roles = Array.isArray(requiredRoles) ? requiredRoles : [requiredRoles];
+
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({
+        success: false,
+        message: `${roles.join(' or ')} access required`,
+      });
+    }
+    next();
+  };
+};
+
 module.exports = {
   protect,
   isAdmin,
   isCitizen,
+  authorize,
 };

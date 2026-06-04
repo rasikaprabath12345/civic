@@ -14,6 +14,7 @@ const connectDB = require('./config/db');
 
 // Import routes
 const authRoutes = require('./routes/authRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 // Initialize Express app
 const app = express();
@@ -60,6 +61,13 @@ app.get('/', (req, res) => {
 // POST /api/auth/login - Login user
 // GET /api/auth/me - Get current user (protected)
 app.use('/api/auth', authRoutes);
+
+// Admin routes (protected)
+// GET /api/admin/requests - Get all requests
+// PATCH /api/admin/requests/:requestId - Update request status
+// GET /api/admin/users - Get all users
+// GET /api/admin/stats - Get statistics
+app.use('/api/admin', adminRoutes);
 
 /**
  * 404 Error Handler
