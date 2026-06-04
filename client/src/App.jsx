@@ -1,11 +1,3 @@
-/**
- * App Component
- * =============
- * Main App component with routing setup
- * Wraps entire app with AuthProvider
- * Defines all routes (public and protected)
- */
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
@@ -19,24 +11,14 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
-
-/**
- * Placeholder Components
- * These will be built in later steps
- */
-const CitizenDashboard = () => (
-  <div className="max-w-7xl mx-auto px-4 py-12">
-    <h1 className="text-4xl font-bold text-primary mb-6">Citizen Dashboard</h1>
-    <p className="text-gray-600">Coming soon...</p>
-  </div>
-);
-
-const AdminDashboard = () => (
-  <div className="max-w-7xl mx-auto px-4 py-12">
-    <h1 className="text-4xl font-bold text-primary mb-6">Admin Dashboard</h1>
-    <p className="text-gray-600">Coming soon...</p>
-  </div>
-);
+import CitizenDashboard from './pages/CitizenDashboard';
+import AdminDashboard from './pages/AdminDashboard';
+import AppointmentBooking from './pages/AppointmentBooking';
+import ComplaintsPage from './pages/ComplaintsPage';
+import CertificateRequest from './pages/CertificateRequest';
+import RequestTracking from './pages/RequestTracking';
+import ProfilePage from './pages/ProfilePage';
+import NotFound from './pages/NotFound';
 
 /**
  * Main App Component
@@ -69,6 +51,56 @@ function App() {
                 }
               />
 
+              <Route
+                path="/appointments"
+                element={
+                  <ProtectedRoute
+                    element={<AppointmentBooking />}
+                    requiredRole="citizen"
+                  />
+                }
+              />
+
+              <Route
+                path="/complaints"
+                element={
+                  <ProtectedRoute
+                    element={<ComplaintsPage />}
+                    requiredRole="citizen"
+                  />
+                }
+              />
+
+              <Route
+                path="/certificates"
+                element={
+                  <ProtectedRoute
+                    element={<CertificateRequest />}
+                    requiredRole="citizen"
+                  />
+                }
+              />
+
+              <Route
+                path="/requests"
+                element={
+                  <ProtectedRoute
+                    element={<RequestTracking />}
+                    requiredRole="citizen"
+                  />
+                }
+              />
+
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute
+                    element={<ProfilePage />}
+                    requiredRole="citizen"
+                  />
+                }
+              />
+
               {/* Protected Admin Routes */}
               <Route
                 path="/admin-dashboard"
@@ -80,8 +112,8 @@ function App() {
                 }
               />
 
-              {/* Catch all - redirect to home */}
-              <Route path="*" element={<Navigate to="/" replace />} />
+              {/* Catch all - redirect to 404 */}
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
 

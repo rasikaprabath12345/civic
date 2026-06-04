@@ -279,6 +279,8 @@ const Navbar = () => {
                   <li><Link to="/appointments" className={isActive('/appointments') ? 'active' : ''}>Appointments</Link></li>
                   <li><Link to="/certificates" className={isActive('/certificates') ? 'active' : ''}>Certificates</Link></li>
                   <li><Link to="/complaints" className={isActive('/complaints') ? 'active' : ''}>Complaints</Link></li>
+                  <li><Link to="/requests" className={isActive('/requests') ? 'active' : ''}>Track</Link></li>
+                  <li><Link to="/profile" className={isActive('/profile') ? 'active' : ''}>Profile</Link></li>
                 </>
               )}
 
@@ -348,6 +350,8 @@ const Navbar = () => {
                 <Link to="/appointments" className={isActive('/appointments') ? 'active' : ''}>Appointments</Link>
                 <Link to="/certificates" className={isActive('/certificates') ? 'active' : ''}>Certificates</Link>
                 <Link to="/complaints" className={isActive('/complaints') ? 'active' : ''}>Complaints</Link>
+                <Link to="/requests" className={isActive('/requests') ? 'active' : ''}>Track Requests</Link>
+                <Link to="/profile" className={isActive('/profile') ? 'active' : ''}>Profile</Link>
               </>
             )}
 
