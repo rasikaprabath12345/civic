@@ -81,6 +81,8 @@ const register = async (req, res) => {
         email: user.email,
         NIC: user.NIC,
         phone: user.phone,
+        address: user.address,
+        profileImage: user.profileImage,
         role: user.role,
       },
     });
@@ -150,6 +152,8 @@ const login = async (req, res) => {
         email: user.email,
         NIC: user.NIC,
         phone: user.phone,
+        address: user.address,
+        profileImage: user.profileImage,
         role: user.role,
       },
     });
@@ -189,6 +193,8 @@ const getCurrentUser = async (req, res) => {
         email: user.email,
         NIC: user.NIC,
         phone: user.phone,
+        address: user.address,
+        profileImage: user.profileImage,
         role: user.role,
       },
     });
@@ -201,8 +207,149 @@ const getCurrentUser = async (req, res) => {
   }
 };
 
+/**
+ * Update User Profile
+ * PATCH /api/auth/profile/:userId
+ * Protected route - requires valid JWT token
+ *
+ * Body parameters:
+ * - name: Full name (optional)
+ * - phone: Phone number (optional)
+ * - address: Address (optional)
+ * - profileImage: Profile image as base64 (optional)
+ *
+ * Returns: Updated user object
+ */
+const updateProfile = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { name, phone, address, profileImage } = req.body;
+
+    // Debug logging
+    console.log('Update Profile - JWT ID:', req.user.id, 'Type:', typeof req.user.id);
+    console.log('Update Profile - URL ID:', userId, 'Type:', typeof userId);
+
+    // Verify user is updating their own profile (convert both to strings for comparison)
+    if (req.user.id.toString() !== userId.toString()) {
+      console.log('Authorization failed: IDs do not match');
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized to update this profile',
+      });
+    }
+
+    // Build update object with only provided fields
+    const updateData = {};
+    if (name) updateData.name = name;
+    if (phone) updateData.phone = phone;
+    if (address) updateData.address = address;
+    if (profileImage) updateData.profileImage = profileImage;
+
+    // Update user
+    const user = await User.findByIdAndUpdate(userId, updateData, { new: true });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Profile updated successfully',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        NIC: user.NIC,
+        phone: user.phone,
+        address: user.address,
+        profileImage: user.profileImage,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.error('Update Profile Error:', error.message);
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Server error updating profile',
+    });
+  }
+};
+
+/**
+ * Change User Password
+ * PATCH /api/auth/change-password/:userId
+ * Protected route - requires valid JWT token
+ *
+ * Body parameters:
+ * - currentPassword: Current password
+ * - newPassword: New password (min 6 chars)
+ *
+ * Returns: Success message
+ */
+const changePassword = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { currentPassword, newPassword } = req.body;
+
+    // Verify user is changing their own password (convert both to strings for comparison)
+    if (req.user.id.toString() !== userId.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized to change this password',
+      });
+    }
+
+    // Get user with password field (normally hidden)
+    const user = await User.findById(userId).select('+password');
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    // Verify current password
+    const isPasswordMatch = await user.matchPassword(currentPassword);
+    if (!isPasswordMatch) {
+      return res.status(400).json({
+        success: false,
+        message: 'Current password is incorrect',
+      });
+    }
+
+    // Validate new password
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: 'New password must be at least 6 characters',
+      });
+    }
+
+    // Update password
+    user.password = newPassword;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: 'Password changed successfully',
+    });
+  } catch (error) {
+    console.error('Change Password Error:', error.message);
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Server error changing password',
+    });
+  }
+};
+
 module.exports = {
   register,
   login,
   getCurrentUser,
+  updateProfile,
+  changePassword,
 };

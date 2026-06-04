@@ -16,6 +16,7 @@ const ProfilePage = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [activeTab, setActiveTab] = useState('info');
+  const [profileImage, setProfileImage] = useState(user?.profileImage || null);
 
   const [formData, setFormData] = useState({
     name: user?.name || '',
@@ -60,7 +61,10 @@ const ProfilePage = () => {
 
     try {
       setLoading(true);
-      const response = await api.patch(`/auth/profile/${user._id}`, formData);
+      const userId = user.id || user._id;
+      console.log('Frontend - Sending update to:', `/auth/profile/${userId}`);
+      console.log('Frontend - User object:', user);
+      const response = await api.patch(`/auth/profile/${userId}`, formData);
 
       if (response.data.success) {
         setSuccess('Profile updated successfully!');
@@ -90,7 +94,8 @@ const ProfilePage = () => {
 
     try {
       setLoading(true);
-      const response = await api.patch(`/auth/change-password/${user._id}`, {
+      const userId = user.id || user._id;
+      const response = await api.patch(`/auth/change-password/${userId}`, {
         currentPassword: passwordData.currentPassword,
         newPassword: passwordData.newPassword,
       });
@@ -110,6 +115,52 @@ const ProfilePage = () => {
   const handleLogout = () => {
     logout();
     navigate('/');
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setError('Image size must be less than 5MB');
+        return;
+      }
+
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        setError('Please select a valid image file');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        const base64Image = event.target.result;
+        setProfileImage(base64Image);
+        await uploadProfileImage(base64Image);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadProfileImage = async (imageData) => {
+    try {
+      setLoading(true);
+      setError('');
+      const userId = user.id || user._id;
+      const response = await api.patch(`/auth/profile/${userId}`, {
+        profileImage: imageData,
+      });
+
+      if (response.data.success) {
+        setSuccess('Profile image updated successfully!');
+        setTimeout(() => setSuccess(''), 3000);
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to upload image');
+      setProfileImage(user?.profileImage || null);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -155,6 +206,36 @@ const ProfilePage = () => {
             {/* Profile Information Tab */}
             {activeTab === 'info' && (
               <form onSubmit={handleUpdateProfile} className="space-y-6">
+                {/* Profile Image Section */}
+                <div className="text-center mb-8 pb-8 border-b border-gray-200">
+                  <div className="mb-4">
+                    {profileImage ? (
+                      <img
+                        src={profileImage}
+                        alt="Profile"
+                        className="w-32 h-32 rounded-full mx-auto object-cover border-4 border-blue-600"
+                      />
+                    ) : (
+                      <div className="w-32 h-32 rounded-full mx-auto bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-5xl font-bold">
+                        {user?.name?.charAt(0).toUpperCase() || '?'}
+                      </div>
+                    )}
+                  </div>
+                  <label className="inline-block">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      disabled={loading}
+                      className="hidden"
+                    />
+                    <span className="inline-block bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-2 px-4 rounded-lg cursor-pointer transition">
+                      {loading ? 'Uploading...' : 'Change Profile Picture'}
+                    </span>
+                  </label>
+                  <p className="text-xs text-gray-500 mt-2">JPG, PNG or GIF (max 5MB)</p>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Name */}
                   <div>

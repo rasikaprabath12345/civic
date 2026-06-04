@@ -13,6 +13,18 @@ import api from '../services/api';
 export const AuthContext = createContext();
 
 /**
+ * Normalize user object to ensure id field exists
+ * Ensures compatibility with both backend formats
+ */
+const normalizeUser = (userData) => {
+  if (!userData) return null;
+  return {
+    ...userData,
+    id: userData.id || userData._id, // Ensure id field exists
+  };
+};
+
+/**
  * Auth Provider Component
  * Wraps entire app to provide auth state globally
  */
@@ -32,7 +44,7 @@ export const AuthProvider = ({ children }) => {
 
     if (savedToken && savedUser) {
       setToken(savedToken);
-      setUser(JSON.parse(savedUser));
+      setUser(normalizeUser(JSON.parse(savedUser)));
     }
 
     setLoading(false);
@@ -50,14 +62,15 @@ export const AuthProvider = ({ children }) => {
 
       if (response.data.success) {
         const { token: newToken, user: newUser } = response.data;
+        const normalizedUser = normalizeUser(newUser);
 
         // Store in state
         setToken(newToken);
-        setUser(newUser);
+        setUser(normalizedUser);
 
         // Store in localStorage for persistence
         localStorage.setItem('token', newToken);
-        localStorage.setItem('user', JSON.stringify(newUser));
+        localStorage.setItem('user', JSON.stringify(normalizedUser));
 
         return response.data;
       }
@@ -84,14 +97,15 @@ export const AuthProvider = ({ children }) => {
 
       if (response.data.success) {
         const { token: newToken, user: newUser } = response.data;
+        const normalizedUser = normalizeUser(newUser);
 
         // Store in state
         setToken(newToken);
-        setUser(newUser);
+        setUser(normalizedUser);
 
         // Store in localStorage for persistence
         localStorage.setItem('token', newToken);
-        localStorage.setItem('user', JSON.stringify(newUser));
+        localStorage.setItem('user', JSON.stringify(normalizedUser));
 
         return response.data;
       }

@@ -57,6 +57,10 @@ const userSchema = new mongoose.Schema(
       enum: ['citizen', 'admin'],
       default: 'citizen',
     },
+    profileImage: {
+      type: String, // Stores base64 encoded image or image URL
+      default: null,
+    },
     createdAt: {
       type: Date,
       default: Date.now,

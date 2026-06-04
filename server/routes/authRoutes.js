@@ -3,7 +3,7 @@
  * =====================
  * Defines all auth-related endpoints
  * Public routes: register, login
- * Protected route: getCurrentUser
+ * Protected route: getCurrentUser, updateProfile, changePassword
  */
 
 const express = require('express');
@@ -12,6 +12,8 @@ const {
   register,
   login,
   getCurrentUser,
+  updateProfile,
+  changePassword,
 } = require('../controllers/authController');
 const { protect } = require('../middleware/authMiddleware');
 
@@ -37,5 +39,17 @@ router.post('/login', login);
 // GET /api/auth/me
 // Headers: Authorization: Bearer <token>
 router.get('/me', protect, getCurrentUser);
+
+// Update user profile
+// PATCH /api/auth/profile/:userId
+// Headers: Authorization: Bearer <token>
+// Body: { name, phone, address, profileImage }
+router.patch('/profile/:userId', protect, updateProfile);
+
+// Change password
+// PATCH /api/auth/change-password/:userId
+// Headers: Authorization: Bearer <token>
+// Body: { currentPassword, newPassword }
+router.patch('/change-password/:userId', protect, changePassword);
 
 module.exports = router;
